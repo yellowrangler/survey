@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>MOS Survey Gizmo URL Variable Evaluation</title>
+<meta name="description" content="MOS Survey Gizmo URL Variable Evaluation">
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
+<link href="http://fonts.googleapis.com/css?family=Oleo+Script+Swash+Caps:400,700'|Damion|Pacifico|Lusitana|Tangerine|Cormorant+Garamond|Balthazar|Indie+Flower|Josefin+Sans|Lato:100,300,400,700|Open+Sans:300,300i" type="text/css" rel="stylesheet" >
+<link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/aileron" type="text/css"/>
+
+<!-- Vendor Libs -->
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    
+<!-- UI Libs -->
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script>
+
+$(document).ready(function(){
+
+    $("#survey-button").click(function() {
+        
+        var status = "";
+
+        var surveyurl = $('#surveyURL').val();
+        var surveyaction = $('#surveyAction').val();
+        var surveyid = $('#surveyID').val();
+
+        var sdata =  { 
+            surveyid: "", 
+            action: ""
+        };
+
+        sdata.surveyid = surveyid;
+        sdata.action = surveyaction;
+
+        $.post("ajax/getsurveyactions.php", sdata, function(rdata, status) {
+
+            var newsurveyurl = surveyurl+"?"+rdata;
+            window.open(newsurveyurl);
+
+            // alert("Data: " + rdata + "\nStatus: " + status);
+
+        });
+
+        // alert("The button was clicked.");
+    });
+
+});    
+
+</script>
+
+</head>
+<body style="background:white;" >
+<div style="padding-top:25px;" class="container">
+    <div class="row">
+        <div class="jumbotron">
+          <h1 class="display-4">MOS Survey Gizmo</h1>
+          <p class="lead">URL Variable Evaluation</p>  
+          <hr class="my-4">
+          <p style="font-size: 15px;">Starts with filling in the Survey Gizmo questionaire URL. 
+            <br>
+            Then select te action. It defaults to p50 [toggle every other]. 
+            <br>
+            Then select the survey id. This is internal to every survey. Defaults to 1. 
+            <br>
+            Then click the Survey button. 
+            <br>
+            That initiates an asyncronous call to our backend service.
+            <br>
+            The backend service returns the value to add to our key value pair "showqual". 
+            <br>
+            Redirects to the Servet Gizmo service with the key value pair setup.</p>
+          <br>
+          <div class="form-group">
+            <label for="surveyURL">Survey Gismo questionsire URL</label>
+            <input type="text" class="form-control" id="surveyURL" aria-describedby="emailHelp" placeholder="Survey Gismo questionsire URL" required>
+            <small id="surveyurlhelp" class="form-text text-muted">Don't add the Variable URL extra key value pair.</small>
+          </div>
+          <div class="form-group">
+            <label for="surveyAction">Survey Gismo questionsire Action</label>
+            <select id="surveyAction" class="custom-select" required>
+              <option selected>Action</option>
+              <option value="p50" selected="selected">p50</option>
+              <option value="p33">p33</option>
+            </select>
+          </div>
+          <div class="form-inline">
+              <div class="form-group">
+                <label for="surveyID">Survey Gismo Survey ID</label>
+                <input type="text"style="width:60px;" class="form-control" id="surveyID"  value="1">
+              </div>
+          </div>
+           <br>
+          <p class="lead">
+            <a class="btn btn-primary btn-lg" id="survey-button" href="#" role="button">Start Survey</a>
+          </p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
